@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Interface</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat-container {
+            width: 400px;
+            margin: 50px auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        #chat-box {
+            height: 300px;
+            overflow-y: scroll;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+        #chat-input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-box"></div>
+        <textarea id="chat-input" placeholder="Type your query here..."></textarea>
+        <button onclick="sendQuery()">Send</button>
+    </div>
+
+    <script>
+        function sendQuery() {
+            var query = $('#chat-input').val();
+            if (query.trim() === '') return; // Prevent sending empty messages
+    
+            // Display the user's query in the chat box
+            $('#chat-box').append('<div>User: ' + query + '</div>');
+    
+            $.ajax({
+                url: 'https://psychic-invention-6wxg77pqv553r57p-5001.app.github.dev/query', // URL updated to use port 5001 but on Github codesdpace, normally its  http://127.0.0.1:5001
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'query': query }),
+                success: function(data) {
+                    // Display the assistant's response in the chat box
+                    $('#chat-box').append('<div>Assistant: ' + data.response + '</div>');
+                    // Scroll to the bottom of the chat box
+                    $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+                },
+                error: function() {
+                    $('#chat-box').append('<div>Error processing your query.</div>');
+                    $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
+                }
+            });
+    
+            $('#chat-input').val(''); // Clear the input area after sending
+        }
+    
+        $(document).ready(function() {
+            $('#chat-input').on('keypress', function(e) {
+                if (e.which == 13 && !e.shiftKey) { // Enter key pressed, shift not held
+                    sendQuery();
+                    e.preventDefault(); // Prevent the default action (new line)
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>
