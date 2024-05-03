@@ -50,14 +50,18 @@
         function sendQuery() {
             var query = $('#chat-input').val();
             if (query.trim() === '') return; // Prevent sending empty messages
-    
+
             // Display the user's query in the chat box
             $('#chat-box').append('<div>User: ' + query + '</div>');
-    
+
+            // Add the Access-Control-Allow-Origin header to the request
             $.ajax({
-                url: 'https://psychic-invention-6wxg77pqv553r57p-5001.app.github.dev/query', // URL updated to use port 5001 but on Github codesdpace, normally its  http://127.0.0.1:5001
+                url: 'https://didactic-winner-j9p5wwgv4rv2pjr6-5001.app.github.dev/query', // URL updated to use port 5001 but on Github codespace, normally its  http://127.0.0.1:5001
                 type: 'POST',
                 contentType: 'application/json',
+                headers: {
+                    'Access-Control-Allow-Origin': 'https://didactic-winner-j9p5wwgv4rv2pjr6-5500.app.github.dev'
+                },
                 data: JSON.stringify({ 'query': query }),
                 success: function(data) {
                     // Display the assistant's response in the chat box
@@ -70,10 +74,10 @@
                     $('#chat-box').scrollTop($('#chat-box')[0].scrollHeight);
                 }
             });
-    
+
             $('#chat-input').val(''); // Clear the input area after sending
         }
-    
+
         $(document).ready(function() {
             $('#chat-input').on('keypress', function(e) {
                 if (e.which == 13 && !e.shiftKey) { // Enter key pressed, shift not held
@@ -83,6 +87,6 @@
             });
         });
     </script>
-    
+
 </body>
 </html>
